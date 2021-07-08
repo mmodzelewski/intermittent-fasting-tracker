@@ -1,0 +1,7 @@
+{
+  "name": "intermittent-fasting-tracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

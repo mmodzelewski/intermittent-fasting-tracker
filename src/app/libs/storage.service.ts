@@ -27,4 +27,7 @@ export class StorageService {
       });
   }
 
+  removeTimer(): Promise<void> {
+    return Storage.remove({key: TIMER_KEY});
+  }
 }

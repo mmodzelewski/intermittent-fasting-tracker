@@ -48,6 +48,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   stopTimer() {
     this.timer = emptyTimer();
+    this.storage.removeTimer();
     this.subscription?.unsubscribe();
   }
 

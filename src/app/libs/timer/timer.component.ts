@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
+import { StorageService } from '../storage.service';
 import { emptyTimer, formattedTimeLeft, isActiveTimer, newActiveTimer, Timer } from '../time/timer';
 
 @Component({
@@ -8,15 +9,31 @@ import { emptyTimer, formattedTimeLeft, isActiveTimer, newActiveTimer, Timer } f
   styleUrls: ['./timer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimerComponent implements OnDestroy {
+export class TimerComponent implements OnInit, OnDestroy {
 
   timer: Timer = emptyTimer();
   private subscription?: Subscription;
 
-  constructor(private changeRef: ChangeDetectorRef) {}
+  constructor(
+    private storage: StorageService,
+    private changeRef: ChangeDetectorRef,
+  ) {}
 
   get timeLeft(): string | null {
     return isActiveTimer(this.timer) ? formattedTimeLeft(this.timer, Date.now()) : null;
+  }
+
+  ngOnInit(): void {
+    this.storage.getTimer()
+      .then(timer => {
+        if (timer) {
+          this.timer = timer;
+          this.changeRef.markForCheck();
+          if (isActiveTimer(this.timer)) {
+            this.runUpdates();
+          }
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -25,12 +42,17 @@ export class TimerComponent implements OnDestroy {
 
   startTimer() {
     this.timer = newActiveTimer(new Date(), 16);
-    this.subscription = interval(1000).subscribe(() => this.changeRef.markForCheck());
+    this.storage.saveTimer(this.timer);
+    this.runUpdates();
   }
 
   stopTimer() {
     this.timer = emptyTimer();
     this.subscription?.unsubscribe();
+  }
+
+  private runUpdates() {
+    this.subscription = interval(1000).subscribe(() => this.changeRef.markForCheck());
   }
 
 }

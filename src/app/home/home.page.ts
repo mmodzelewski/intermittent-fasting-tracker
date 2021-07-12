@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { add, intervalToDuration } from 'date-fns';
 import { interval, Subscription } from 'rxjs';
-import { formatDuration } from '../libs/time/duration';
+import { formattedTimeLeft, isActiveTimer, newActiveTimer, Timer } from '../libs/time/timer';
 
 @Component({
   selector: 'app-home',
@@ -11,23 +10,14 @@ import { formatDuration } from '../libs/time/duration';
 })
 export class HomePage implements OnDestroy {
 
-  private finishAt?: Date;
+  private timer: Timer | null = null;
   private subscription?: Subscription;
 
   constructor(private changeRef: ChangeDetectorRef) {}
 
   get timeLeft(): string | null {
-    if (this.finishAt) {
-      const duration = {
-        start: Date.now(),
-        end: this.finishAt,
-      };
-      return formatDuration(intervalToDuration(duration));
-    } else {
-      return null;
-    }
+    return isActiveTimer(this.timer) ? formattedTimeLeft(this.timer, Date.now()) : null;
   }
-
 
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -36,7 +26,7 @@ export class HomePage implements OnDestroy {
   }
 
   startTimer() {
-    this.finishAt = add(Date.now(), {hours: 16});
+    this.timer = newActiveTimer(new Date(), 16);
     this.subscription = interval(1000).subscribe(() => this.changeRef.markForCheck());
   }
 

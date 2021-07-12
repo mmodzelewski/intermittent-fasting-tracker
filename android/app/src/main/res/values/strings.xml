@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">intermittent-fasting-tracker</string>
+    <string name="title_activity_main">intermittent-fasting-tracker</string>
+    <string name="package_name">dev.modzelewski.ift</string>
+    <string name="custom_url_scheme">dev.modzelewski.ift</string>
+</resources>

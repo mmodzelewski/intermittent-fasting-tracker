@@ -1,0 +1,6 @@
+{
+	"appId": "dev.modzelewski.ift",
+	"appName": "intermittent-fasting-tracker",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

@@ -1,5 +1,5 @@
-import { add, intervalToDuration, parseJSON } from 'date-fns';
-import { formatDuration } from './duration';
+import { add, intervalToDuration, isAfter, parseJSON } from 'date-fns';
+import { Duration } from './duration';
 
 export type Timer = ActiveTimer | EmptyTimer;
 
@@ -37,10 +37,20 @@ export const timerFromString = (value: string): Timer => {
 export const isActiveTimer = (timer: any | null): timer is ActiveTimer => timer?.type === 'ACTIVE_TIMER';
 const isEmptyTimer = (timer: any | null): timer is EmptyTimer => timer?.type === 'EMPTY_TIMER';
 
-export const formattedTimeLeft = (timer: ActiveTimer, now: Date | number): string => formatDuration(timeLeft(timer, now));
-
-const timeLeft = (timer: ActiveTimer, now: Date | number): Duration =>
-  intervalToDuration({
+export const timeLeft = (timer: ActiveTimer, now: Date | number): Duration => {
+  const {
+    hours = 0,
+    minutes = 0,
+    seconds = 0,
+  } = intervalToDuration({
     start: now,
     end: timer.predictedFinish,
   });
+  return {
+    hours,
+    minutes,
+    seconds,
+    overtime: isAfter(now, timer.predictedFinish),
+  };
+};
+

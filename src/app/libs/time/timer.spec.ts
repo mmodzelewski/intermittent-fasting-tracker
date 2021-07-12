@@ -1,4 +1,5 @@
-import { isActiveTimer, timerFromString } from './timer';
+import { sub } from 'date-fns';
+import { isActiveTimer, newActiveTimer, timeLeft, timerFromString } from './timer';
 
 describe('timer', () => {
 
@@ -29,6 +30,24 @@ describe('timer', () => {
       "testing": "hello"
     }`;
     expect(() => timerFromString(json)).toThrow();
+  });
+
+  it('should get overtime', () => {
+    const now = Date.now();
+    const time5HoursAgo = sub(now, {hours: 5});
+
+    const time = timeLeft(newActiveTimer(time5HoursAgo, 4), now);
+    expect(time.hours).toEqual(1);
+    expect(time.overtime).toBeTrue();
+  });
+
+  it('should not get overtime', () => {
+    const now = Date.now();
+    const time5HoursAgo = sub(now, {hours: 5});
+
+    const time = timeLeft(newActiveTimer(time5HoursAgo, 6), now);
+    expect(time.hours).toEqual(1);
+    expect(time.overtime).toBeFalse();
   });
 
 });

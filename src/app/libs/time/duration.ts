@@ -1,3 +1,10 @@
+export interface Duration {
+  hours: number;
+  minutes: number;
+  seconds: number;
+  overtime: boolean;
+}
+
 export const formatDuration = (duration: Duration): string =>
   `${duration.hours}:${addLeadingZero(duration.minutes)}:${addLeadingZero(duration.seconds)}`;
 

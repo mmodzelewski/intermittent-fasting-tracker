@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { StorageService } from '../storage.service';
-import { emptyTimer, formattedTimeLeft, isActiveTimer, newActiveTimer, Timer } from '../time/timer';
+import { Duration } from '../time/duration';
+import { emptyTimer, isActiveTimer, newActiveTimer, timeLeft, Timer } from '../time/timer';
 
 @Component({
   selector: 'app-timer',
@@ -19,8 +20,8 @@ export class TimerComponent implements OnInit, OnDestroy {
     private changeRef: ChangeDetectorRef,
   ) {}
 
-  get timeLeft(): string | null {
-    return isActiveTimer(this.timer) ? formattedTimeLeft(this.timer, Date.now()) : null;
+  get timeLeft(): Duration | null {
+    return isActiveTimer(this.timer) ? timeLeft(this.timer, Date.now()) : null;
   }
 
   ngOnInit(): void {

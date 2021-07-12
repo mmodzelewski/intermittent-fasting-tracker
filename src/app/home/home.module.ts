@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { DurationPipe } from '../libs/time/duration.pipe';
 import { TimerComponent } from '../libs/timer/timer.component';
 
 import { HomePageRoutingModule } from './home-routing.module';
@@ -15,6 +16,6 @@ import { HomePage } from './home.page';
     IonicModule,
     HomePageRoutingModule,
   ],
-  declarations: [HomePage, TimerComponent],
+  declarations: [HomePage, TimerComponent, DurationPipe],
 })
 export class HomePageModule {}

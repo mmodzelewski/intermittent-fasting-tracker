@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
-import { Duration } from '../time/duration';
-import { emptyTimer, isActiveTimer, newActiveTimer, timeLeft, Timer } from '../time/timer';
+import { emptyTimer, newActiveTimer, Timer } from '../time/timer';
 
 @Component({
   selector: 'app-timer',
@@ -10,51 +8,36 @@ import { emptyTimer, isActiveTimer, newActiveTimer, timeLeft, Timer } from '../t
   styleUrls: ['./timer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimerComponent implements OnInit, OnDestroy {
+export class TimerComponent implements OnInit {
 
   timer: Timer = emptyTimer();
-  private subscription?: Subscription;
 
   constructor(
     private storage: StorageService,
     private changeRef: ChangeDetectorRef,
   ) {}
 
-  get timeLeft(): Duration | null {
-    return isActiveTimer(this.timer) ? timeLeft(this.timer, Date.now()) : null;
-  }
-
   ngOnInit(): void {
-    this.storage.getTimer()
-      .then(timer => {
-        if (timer) {
-          this.timer = timer;
-          this.changeRef.markForCheck();
-          if (isActiveTimer(this.timer)) {
-            this.runUpdates();
-          }
-        }
-      });
+    this.restoreTimer();
   }
 
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
 
   startTimer() {
     this.timer = newActiveTimer(new Date(), 16);
     this.storage.saveTimer(this.timer);
-    this.runUpdates();
   }
 
   stopTimer() {
     this.timer = emptyTimer();
     this.storage.removeTimer();
-    this.subscription?.unsubscribe();
   }
 
-  private runUpdates() {
-    this.subscription = interval(1000).subscribe(() => this.changeRef.markForCheck());
+  private async restoreTimer() {
+    const timer = await this.storage.getTimer();
+    if (timer) {
+      this.timer = timer;
+      this.changeRef.markForCheck();
+    }
   }
 
 }

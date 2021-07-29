@@ -7,7 +7,7 @@ interface EmptyTimer {
   type: 'EMPTY_TIMER';
 }
 
-interface ActiveTimer {
+export interface ActiveTimer {
   type: 'ACTIVE_TIMER';
   startedAt: Date;
   predictedFinish: Date;

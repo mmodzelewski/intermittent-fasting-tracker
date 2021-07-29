@@ -1,0 +1,4 @@
+<ion-label>Started at: {{timer.startedAt | date: 'shortTime'}}</ion-label>
+<ion-label>Finishing at: {{timer.predictedFinish | date: 'shortTime'}}</ion-label>
+<ion-label>{{timeLeft | duration}}</ion-label>
+<ion-button (click)="stop.next(true)">Stop</ion-button>

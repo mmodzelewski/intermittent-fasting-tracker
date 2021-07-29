@@ -1,5 +1,9 @@
-<ion-label>{{timeLeft | duration}}</ion-label>
 <ng-container [ngSwitch]="timer.type">
-  <ion-button *ngSwitchCase="'ACTIVE_TIMER'" (click)="stopTimer()">Stop</ion-button>
+  <app-active-timer
+    *ngSwitchCase="'ACTIVE_TIMER'"
+    [timer]="timer"
+    (stop)="stopTimer()"
+  >
+  </app-active-timer>
   <ion-button *ngSwitchDefault (click)="startTimer()">Start</ion-button>
 </ng-container>

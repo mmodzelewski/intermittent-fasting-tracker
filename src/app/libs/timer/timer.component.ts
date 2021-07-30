@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { interval, map, Observable } from 'rxjs';
 import { StorageService } from '../storage.service';
 import { emptyTimer, newActiveTimer, Timer } from '../time/timer';
 
@@ -11,6 +12,7 @@ import { emptyTimer, newActiveTimer, Timer } from '../time/timer';
 export class TimerComponent implements OnInit {
 
   timer: Timer = emptyTimer();
+  time: Observable<number> = interval(1000).pipe(map((_) => Date.now()));
 
   constructor(
     private storage: StorageService,
@@ -20,7 +22,6 @@ export class TimerComponent implements OnInit {
   ngOnInit(): void {
     this.restoreTimer();
   }
-
 
   startTimer() {
     this.timer = newActiveTimer(new Date(), 16);

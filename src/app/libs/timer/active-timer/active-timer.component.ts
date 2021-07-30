@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-} from '@angular/core';
-import { interval } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Duration } from '../../time/duration';
 import { ActiveTimer, timeLeft } from '../../time/timer';
 
@@ -17,24 +8,19 @@ import { ActiveTimer, timeLeft } from '../../time/timer';
   styleUrls: ['./active-timer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActiveTimerComponent implements OnDestroy {
+export class ActiveTimerComponent {
 
   @Input()
   timer!: ActiveTimer;
 
+  @Input()
+  time?: number;
+
   @Output()
   stop = new EventEmitter<boolean>();
 
-  private subscription = interval(1000).subscribe(() => this.changeRef.markForCheck());
-
-  constructor(private changeRef: ChangeDetectorRef) {}
-
   get timeLeft(): Duration {
-    return timeLeft(this.timer, Date.now());
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    return timeLeft(this.timer, this.time ?? Date.now());
   }
 
 }

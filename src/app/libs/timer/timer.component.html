@@ -2,6 +2,7 @@
   <app-active-timer
     *ngSwitchCase="'ACTIVE_TIMER'"
     [timer]="timer"
+    [time]="time | async"
     (stop)="stopTimer()"
   >
   </app-active-timer>

@@ -3,7 +3,7 @@
     *ngSwitchCase="'ACTIVE_TIMER'"
     [timer]="timer"
     [time]="time | async"
-    (stop)="stopTimer()"
+    (stop)="stopAndSaveTimer()"
   >
   </app-active-timer>
   <div *ngSwitchDefault>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { interval, map, Observable } from 'rxjs';
 import { StorageService } from '../storage.service';
-import { emptyTimer, newActiveTimer, Timer } from '../time/timer';
+import { emptyTimer, finishTimer, isActiveTimer, newActiveTimer, Timer } from '../time/timer';
 
 @Component({
   selector: 'app-timer',
@@ -47,9 +47,12 @@ export class TimerComponent implements OnInit {
     this.storage.saveTimer(this.timer);
   }
 
-  stopTimer() {
-    this.timer = emptyTimer();
-    this.storage.removeTimer();
+  stopAndSaveTimer() {
+    if (isActiveTimer(this.timer)) {
+      this.storage.saveFinishedTimer(finishTimer(this.timer, new Date()));
+      this.timer = emptyTimer();
+      this.storage.removeTimer();
+    }
   }
 
   private async restoreTimer() {

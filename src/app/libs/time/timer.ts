@@ -1,7 +1,7 @@
 import { add, intervalToDuration, isAfter, parseJSON } from 'date-fns';
 import { Duration } from './duration';
 
-export type Timer = ActiveTimer | EmptyTimer;
+export type Timer = ActiveTimer | EmptyTimer | FinishedTimer;
 
 interface EmptyTimer {
   type: 'EMPTY_TIMER';
@@ -11,6 +11,13 @@ export interface ActiveTimer {
   type: 'ACTIVE_TIMER';
   startedAt: Date;
   predictedFinish: Date;
+}
+
+export interface FinishedTimer {
+  type: 'FINISHED_TIMER';
+  startedAt: Date;
+  predictedFinish: Date;
+  finishedAt: Date;
 }
 
 export const emptyTimer = (): EmptyTimer => ({type: 'EMPTY_TIMER'});
@@ -31,11 +38,23 @@ export const timerFromString = (value: string): Timer => {
   if (isEmptyTimer(parsedTimer)) {
     return parsedTimer;
   }
+  if (isFinishedTimer(parsedTimer)) {
+    parsedTimer.startedAt = parseJSON(parsedTimer.startedAt);
+    parsedTimer.predictedFinish = parseJSON(parsedTimer.predictedFinish);
+    parsedTimer.finishedAt = parseJSON(parsedTimer.finishedAt);
+  }
   throw new Error(`Could not parse value to a timer. Value: ${value}`);
 };
 
+export const finishTimer = (timer: ActiveTimer, finishingAt: Date): FinishedTimer => ({
+  ...timer,
+  type: 'FINISHED_TIMER',
+  finishedAt: finishingAt,
+});
+
 export const isActiveTimer = (timer: any | null): timer is ActiveTimer => timer?.type === 'ACTIVE_TIMER';
 const isEmptyTimer = (timer: any | null): timer is EmptyTimer => timer?.type === 'EMPTY_TIMER';
+const isFinishedTimer = (timer: any | null): timer is FinishedTimer => timer?.type === 'FINISHED_TIMER';
 
 export const timeLeft = (timer: ActiveTimer, now: Date | number): Duration => {
   const {

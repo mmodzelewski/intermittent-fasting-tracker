@@ -29,19 +29,21 @@ export const newActiveTimer = (startingAt: Date, hours: number): ActiveTimer => 
 });
 
 export const timerFromString = (value: string): Timer => {
-  const parsedTimer = JSON.parse(value);
-  if (isActiveTimer(parsedTimer)) {
-    parsedTimer.startedAt = parseJSON(parsedTimer.startedAt);
-    parsedTimer.predictedFinish = parseJSON(parsedTimer.predictedFinish);
-    return parsedTimer;
-  }
-  if (isEmptyTimer(parsedTimer)) {
-    return parsedTimer;
-  }
-  if (isFinishedTimer(parsedTimer)) {
-    parsedTimer.startedAt = parseJSON(parsedTimer.startedAt);
-    parsedTimer.predictedFinish = parseJSON(parsedTimer.predictedFinish);
-    parsedTimer.finishedAt = parseJSON(parsedTimer.finishedAt);
+  const parsedTimer: Timer = JSON.parse(value);
+  switch (parsedTimer.type) {
+    case 'ACTIVE_TIMER':
+      parsedTimer.startedAt = parseJSON(parsedTimer.startedAt);
+      parsedTimer.predictedFinish = parseJSON(parsedTimer.predictedFinish);
+      return parsedTimer;
+    case 'FINISHED_TIMER':
+      parsedTimer.startedAt = parseJSON(parsedTimer.startedAt);
+      parsedTimer.predictedFinish = parseJSON(parsedTimer.predictedFinish);
+      parsedTimer.finishedAt = parseJSON(parsedTimer.finishedAt);
+      return parsedTimer;
+    case 'EMPTY_TIMER':
+      return parsedTimer;
+    default:
+      const x: never = parsedTimer;
   }
   throw new Error(`Could not parse value to a timer. Value: ${value}`);
 };

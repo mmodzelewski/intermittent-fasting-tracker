@@ -13,6 +13,25 @@ export class TimerComponent implements OnInit {
 
   timer: Timer = emptyTimer();
   time: Observable<number> = interval(1000).pipe(map((_) => Date.now()));
+  selectOptions: any = {
+    header: 'Fasting time',
+  };
+
+  readonly fastingOptions = [
+    {
+      label: '16',
+      value: 16,
+    },
+    {
+      label: '18',
+      value: 18,
+    },
+    {
+      label: '20',
+      value: 20,
+    },
+  ] as const;
+  fastingTime = this.fastingOptions[0].value;
 
   constructor(
     private storage: StorageService,
@@ -24,7 +43,7 @@ export class TimerComponent implements OnInit {
   }
 
   startTimer() {
-    this.timer = newActiveTimer(new Date(), 16);
+    this.timer = newActiveTimer(new Date(), this.fastingTime);
     this.storage.saveTimer(this.timer);
   }
 

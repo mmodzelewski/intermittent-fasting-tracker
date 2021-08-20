@@ -56,7 +56,7 @@ export const finishTimer = (timer: ActiveTimer, finishingAt: Date): FinishedTime
 
 export const isActiveTimer = (timer: any | null): timer is ActiveTimer => timer?.type === 'ACTIVE_TIMER';
 const isEmptyTimer = (timer: any | null): timer is EmptyTimer => timer?.type === 'EMPTY_TIMER';
-const isFinishedTimer = (timer: any | null): timer is FinishedTimer => timer?.type === 'FINISHED_TIMER';
+export const isFinishedTimer = (timer: any | null): timer is FinishedTimer => timer?.type === 'FINISHED_TIMER';
 
 export const timeLeft = (timer: ActiveTimer, now: Date | number): Duration => {
   const {

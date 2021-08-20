@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
+import { DurationPipe } from '../../time/duration.pipe';
+import { newActiveTimer } from '../../time/timer';
 
 import { ActiveTimerComponent } from './active-timer.component';
 
@@ -9,16 +11,17 @@ describe('ActiveTimerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ActiveTimerComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ActiveTimerComponent, DurationPipe],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActiveTimerComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {
+    component.timer = newActiveTimer(new Date(), 16);
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 });
